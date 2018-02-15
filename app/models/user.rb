@@ -11,4 +11,6 @@ class User < ApplicationRecord
     uniqueness: { case_sensitive: false }
 
   before_save { email.downcase! }
+
+  has_secure_password
 end
