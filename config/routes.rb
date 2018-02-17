@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
   get '/signup', to: 'users#new'
+  post '/signup', to: 'users#create'
+  resources :users
 
   get '/help', to: 'static_pages#help'
   get '/about', to: 'static_pages#about'
