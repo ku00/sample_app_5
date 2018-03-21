@@ -3,7 +3,7 @@ language: ruby
 services:
   - postgresql
 
-bundler_args: "--without development"
+bundler_args: "--without development --jobs=3"
 
 cache: bundler
 
