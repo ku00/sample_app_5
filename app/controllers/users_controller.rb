@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
-  before_action :logged_in_user, only: [:edit, :update, :destroy]
-  before_action :correct_user, only: [:edit, :update]
+  before_action :logged_in_user, only: [:update, :destroy]
+  before_action :correct_user, only: [:update]
   before_action :admin_user, only: [:destroy]
 
   def index
@@ -22,10 +22,6 @@ class UsersController < ApplicationController
     else
       render json: @user.errors, status: :unprocessable_entity
     end
-  end
-
-  def edit
-    @user = User.find(params[:id])
   end
 
   def update
