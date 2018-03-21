@@ -14,3 +14,6 @@ before_script:
 script:
   - bin/rails db:migrate RAILS_ENV=test
   - bin/rails test
+
+notifications:
+  email: false
