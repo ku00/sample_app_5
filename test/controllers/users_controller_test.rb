@@ -6,9 +6,9 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     @other_user = users(:archer)
   end
 
-  test "should redirect index when not logged in" do
-    get users_path
-    assert_redirected_to login_url
+  test "should get index" do
+    get users_url, as: :json
+    assert_response :success
   end
 
   test "should get new" do
