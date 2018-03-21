@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
-  before_action :logged_in_user, only: [:update, :destroy]
-  before_action :correct_user, only: [:update]
+  before_action :logged_in_user, only: [:destroy]
+  before_action :correct_user, only: []
   before_action :admin_user, only: [:destroy]
 
   def index
@@ -27,10 +27,9 @@ class UsersController < ApplicationController
   def update
     @user = User.find(params[:id])
     if @user.update_attributes(user_params)
-      flash[:success] = "Profile updated"
-      redirect_to @user
+      render json: @user
     else
-      render 'edit'
+      render json: @user.errors, status: :unprocessable_entity
     end
   end
 

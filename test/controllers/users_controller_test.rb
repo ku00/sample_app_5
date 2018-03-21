@@ -31,27 +31,28 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
-  test "should redirect update when not logged in" do
-    patch user_path(@user), params: {
+  test "should update user" do
+    patch user_url(@user), params: {
       user: {
         name: @user.name,
         email: @user.email
       }
-    }
-    assert_not flash.empty?
-    assert_redirected_to login_url
+    }, as: :json
+
+    assert_response 200
   end
 
-  test "should not allow the admin attribute to be edited via the web" do
-    log_in_as(@other_user)
+  test "should not allow the admin attribute to be edited" do
     assert_not @other_user.admin?
+
     patch user_path(@other_user), params: {
       user: {
         password: "",
         password_confirmation: "",
         admin: true
       }
-    }
+    }, as: :json
+
     assert_not @other_user.reload.admin?
   end
 
