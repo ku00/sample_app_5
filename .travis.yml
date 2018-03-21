@@ -1,0 +1,15 @@
+language: ruby
+
+services:
+  - postgresql
+
+bundler_args: "--without development production --development"
+
+cache: bundler
+
+before_script:
+  - cp config/database.yml.travis config/database.yml
+  - bin/rails db:migrate RAILS_ENV=test
+
+script:
+  - bin/rails test
