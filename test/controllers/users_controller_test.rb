@@ -11,6 +11,11 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "should show user" do
+    get user_url(@user), as: :json
+    assert_response :success
+  end
+
   test "should get new" do
     get signup_path
     assert_response :success
