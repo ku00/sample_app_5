@@ -16,6 +16,21 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "should create user" do
+    assert_difference 'User.count' do
+      post users_url, params: {
+        user: {
+          name: 'lawrence',
+          email: 'lawrence@example.com',
+          password: 'password',
+          password_confirmation: 'password'
+        }
+      }, as: :json
+
+      assert_response 201
+    end
+  end
+
   test "should redirect edit when not logged in" do
     get edit_user_path(@user)
     assert_not flash.empty?
