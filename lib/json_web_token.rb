@@ -11,12 +11,16 @@ class JsonWebToken
     end
 
     def decode(token)
-      JWT.decode(
+      payload, _ = JWT.decode(
         token,
         rsa_private.public_key,
         true,
         { algorithm: ALGORITHM }
       )
+
+      payload
+    rescue JWT::ExpiredSignature
+      {}
     end
 
     private
