@@ -4,7 +4,7 @@ class JsonWebToken
   ALGORITHM = 'RS256'
 
   class << self
-    def encode(payload, expire = 10.seconds)
+    def encode(payload, expire = 1.day)
       payload[:exp] = Time.current.to_i + expire.to_i
 
       JWT.encode(payload, rsa_private, ALGORITHM)
