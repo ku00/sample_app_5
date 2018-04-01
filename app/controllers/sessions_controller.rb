@@ -6,9 +6,9 @@ class SessionsController < ApplicationController
     user = User.find_by(email: session_params[:email].downcase)
     if user && user.authenticate(session_params[:password])
       jwt = JsonWebToken.encode({ user_id: user.id })
-      render json: { jwt: jwt }
+      render json: { jwt: jwt }, status: :created
     else
-      render json: {}, status: :unprocessable_entity
+      render json: { errors: 'Invalid email or password' }, status: :unauthorized
     end
   end
 
