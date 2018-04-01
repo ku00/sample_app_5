@@ -26,7 +26,7 @@ module SessionsHelper
   end
 
   def current_user
-    if user_id = session[:user_id]
+    if user_id = @auth_token[0]["user_id"]
       @current_user ||= User.find_by(id: user_id)
     elsif user_id = cookies.signed[:user_id]
       user = User.find_by(id: user_id)
@@ -48,5 +48,23 @@ module SessionsHelper
 
   def store_location
     session[:forwarding_url] = request.original_url if request.get?
+  end
+
+  def authenticate_user
+    invalid_authentication unless request_token
+
+    @auth_token ||= JsonWebToken.decode(request_token)
+    invalid_authentication unless current_user
+  end
+
+  def request_token
+    return unless auth_header = request.headers['Authorization']
+
+    scheme, token = auth_header.split(' ')
+    scheme == 'Bearer' ? token : nil
+  end
+
+  def invalid_authentication
+    render json: { errors: 'Invalid request' }, status: :unauthorized and return
   end
 end
