@@ -4,15 +4,18 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
   def setup
     @user = users(:michael)
     @other_user = users(:archer)
+
+    jwt = JsonWebToken.encode({ user_id: @user.id })
+    @headers = { Authorization: "Bearer #{jwt}" }
   end
 
   test "should get index" do
-    get users_url, as: :json
+    get users_url, headers: @headers, as: :json
     assert_response :success
   end
 
   test "should show user" do
-    get user_url(@user), as: :json
+    get user_url(@user), headers: @headers, as: :json
     assert_response :success
   end
 
@@ -25,7 +28,7 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
           password: 'password',
           password_confirmation: 'password'
         }
-      }, as: :json
+      }, headers: @headers, as: :json
 
       assert_response 201
     end
@@ -37,7 +40,7 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
         name: @user.name,
         email: @user.email
       }
-    }, as: :json
+    }, headers: @headers, as: :json
 
     assert_response 200
   end
@@ -51,14 +54,14 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
         password_confirmation: "",
         admin: true
       }
-    }, as: :json
+    }, headers: @headers, as: :json
 
     assert_not @other_user.reload.admin?
   end
 
   test "should destroy user" do
     assert_difference('User.count', -1) do
-      delete user_url(@user), as: :json
+      delete user_url(@user), headers: @headers, as: :json
     end
 
     assert_response 204
