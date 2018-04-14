@@ -26,6 +26,8 @@ module SessionsHelper
   end
 
   def current_user
+    return unless @auth_token
+
     if user_id = @auth_token["user_id"]
       @current_user ||= User.find_by(id: user_id)
     elsif user_id = cookies.signed[:user_id]
