@@ -3,14 +3,12 @@ class SessionsController < ApplicationController
   end
 
   def create
-    user = User.find_by(email: params[:session][:email].downcase)
-    if user && user.authenticate(params[:session][:password])
-      log_in user
-      params[:session][:remember_me] == '1' ? remember(user) : forget(user)
-      redirect_back_or user
+    user = User.find_by(email: session_params[:email].downcase)
+    if user && user.authenticate(session_params[:password])
+      jwt = JsonWebToken.encode({ user_id: user.id })
+      render json: { jwt: jwt }, status: :created
     else
-      flash.now[:danger] = "Invalid email/password combination"
-      render 'new'
+      render json: { errors: 'Invalid email or password' }, status: :unauthorized
     end
   end
 
@@ -18,4 +16,10 @@ class SessionsController < ApplicationController
     log_out if logged_in?
     redirect_to root_url
   end
+
+  private
+
+    def session_params
+      params.require(:session).permit(:email, :password, :remember_me)
+    end
 end
